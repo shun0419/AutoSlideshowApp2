@@ -14,6 +14,11 @@ class MainActivity : AppCompatActivity() {
 
     private val PERMISSIONS_REQUEST_CODE = 100
     private var cursor: Cursor? = null
+    // indexからIDを取得し、そのIDから画像のURIを取得する
+    var fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+    var id = cursor!!.getLong(fieldIndex)
+    var imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,11 +43,14 @@ class MainActivity : AppCompatActivity() {
 
         move_button.setOnClickListener {
             //            Todo　進むボタンでやること
-            cursor!!.moveToNext()
+            cursor!!.moveToNext() {
+                imageView.setImageURI(imageUri)
+            }
         }
 
         back_button.setOnClickListener {
             //            Todo 戻るボタンでやること
+            cursor!!.moveToPrevious()
         }
 
         start_button.setOnClickListener {
@@ -73,10 +81,6 @@ class MainActivity : AppCompatActivity() {
                 null // ソート (null ソートなし)
         )
         if (cursor!!.moveToFirst()) {
-            // indexからIDを取得し、そのIDから画像のURIを取得する
-            val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
-            val id = cursor!!.getLong(fieldIndex)
-            val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
             imageView.setImageURI(imageUri)
         }
