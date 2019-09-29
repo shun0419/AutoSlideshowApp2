@@ -15,6 +15,7 @@ class MainActivity : AppCompatActivity() {
     private val PERMISSIONS_REQUEST_CODE = 100
     private var cursor: Cursor? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -36,15 +37,16 @@ class MainActivity : AppCompatActivity() {
 
 
         move_button.setOnClickListener {
-//            Todo　進むボタンでやること
+            //            Todo　進むボタンでやること
+            cursor!!.moveToNext()
         }
 
         back_button.setOnClickListener {
-//            Todo 戻るボタンでやること
+            //            Todo 戻るボタンでやること
         }
 
         start_button.setOnClickListener {
-//            Todo 再生ボタンでやること
+            //            Todo 再生ボタンでやること
             move_button.isEnabled = false
             back_button.isEnabled = false
 
@@ -63,23 +65,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun getContentsInfo() {
         val resolver = contentResolver
-        val cursor = resolver.query(
+        cursor = resolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, // データの種類
                 null, // 項目(null = 全項目)
                 null, // フィルタ条件(null = フィルタなし)
                 null, // フィルタ用パラメータ
                 null // ソート (null ソートなし)
         )
-        if (cursor.moveToFirst()) {
+        if (cursor!!.moveToFirst()) {
             // indexからIDを取得し、そのIDから画像のURIを取得する
-            val fieldIndex = cursor.getColumnIndex(MediaStore.Images.Media._ID)
-            val id = cursor.getLong(fieldIndex)
+            val fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+            val id = cursor!!.getLong(fieldIndex)
             val imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
             imageView.setImageURI(imageUri)
         }
-        cursor.close()
-    }
-
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        cursor!!.close()
+
+    }
+}
