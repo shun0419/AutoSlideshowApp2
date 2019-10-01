@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                                 timer.text = String.format("%2.0f", mTimerSec)
                             }
                         }
-                    }, 100, 100) // 最初に始動させるまで 100ミリ秒、ループの間隔を 100ミリ秒 に設定
+                    }, 2000, 2000)
                 }
 
 
