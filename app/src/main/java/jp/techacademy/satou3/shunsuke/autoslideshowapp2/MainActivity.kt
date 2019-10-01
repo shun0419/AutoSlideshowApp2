@@ -16,11 +16,8 @@ class MainActivity : AppCompatActivity() {
 
     private val PERMISSIONS_REQUEST_CODE = 100
     private var cursor: Cursor? = null
-    // indexからIDを取得し、そのIDから画像のURIを取得する
-    var fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
-    var id = cursor!!.getLong(fieldIndex)
-    var imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
-
+    var mTimer: Timer? = null
+    var mHandler = Handler()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +46,10 @@ class MainActivity : AppCompatActivity() {
             } else {
                 cursor!!.moveToFirst()
             }
+            // indexからIDを取得し、そのIDから画像のURIを取得する
+            var fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+            var id = cursor!!.getLong(fieldIndex)
+            var imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
             imageView.setImageURI(imageUri)
         }
 
@@ -57,20 +58,20 @@ class MainActivity : AppCompatActivity() {
             if (cursor!!.moveToPrevious()) {
             } else {
                 cursor!!.moveToLast()
-
-                imageView.setImageURI(imageUri)
             }
+            // indexからIDを取得し、そのIDから画像のURIを取得する
+            var fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+            var id = cursor!!.getLong(fieldIndex)
+            var imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                imageView.setImageURI(imageUri)
+
         }
 
         start_button.setOnClickListener {
-            var start: String? = null
-            var mTimer: Timer? = null
-            var mTimerSec =0.0
-            var mHandler = Handler()
-            var timer = 0
 
-            if (start == null) {
-//            Todo 再生ボタン1回目でやること
+
+            if (mTimer == null) {
+//             再生ボタン1回目でやること
                 move_button.isEnabled = false
                 back_button.isEnabled = false
                 start_button.text = "停止"
@@ -78,9 +79,12 @@ class MainActivity : AppCompatActivity() {
                     mTimer = Timer()
                     mTimer!!.schedule(object : TimerTask() {
                         override fun run() {
-                            mTimerSec += 2.0
                             mHandler.post {
-                                timer.text = String.format("%2.0f", mTimerSec)
+                                if (cursor!!.moveToNext()) {
+                                } else {
+                                    cursor!!.moveToFirst()
+                                }
+
                             }
                         }
                     }, 2000, 2000)
@@ -89,13 +93,11 @@ class MainActivity : AppCompatActivity() {
 
 
             } else {
-//            Todo 再生ボタン2回目でやること
+//             再生ボタン2回目でやること
                 move_button.isEnabled = true
                 back_button.isEnabled = true
                 start_button.text = "再生"
-                start = null
-
-
+                mTimer = null
             }
         }
     }
@@ -121,6 +123,10 @@ class MainActivity : AppCompatActivity() {
                 null // ソート (null ソートなし)
         )
         if (cursor!!.moveToFirst()) {
+            // indexからIDを取得し、そのIDから画像のURIを取得する
+            var fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+            var id = cursor!!.getLong(fieldIndex)
+            var imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 
             imageView.setImageURI(imageUri)
         }
@@ -129,8 +135,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
         cursor!!.close()
-
     }
 }
