@@ -7,8 +7,10 @@ import android.database.Cursor
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -42,24 +44,62 @@ class MainActivity : AppCompatActivity() {
 
 
         move_button.setOnClickListener {
-            //            Todo　進むボタンでやること
-            cursor!!.moveToNext() {
-                imageView.setImageURI(imageUri)
+            //            　進むボタンでやること
+            if (cursor!!.moveToNext()) {
+            } else {
+                cursor!!.moveToFirst()
             }
+            imageView.setImageURI(imageUri)
         }
 
         back_button.setOnClickListener {
             //            Todo 戻るボタンでやること
-            cursor!!.moveToPrevious()
+            if (cursor!!.moveToPrevious()) {
+            } else {
+                cursor!!.moveToLast()
+
+                imageView.setImageURI(imageUri)
+            }
         }
 
         start_button.setOnClickListener {
-            //            Todo 再生ボタンでやること
-            move_button.isEnabled = false
-            back_button.isEnabled = false
+            var start: String? = null
+            var mTimer: Timer? = null
+            var mTimerSec =0.0
+            var mHandler = Handler()
+            var timer = 0
 
+            if (start == null) {
+//            Todo 再生ボタン1回目でやること
+                move_button.isEnabled = false
+                back_button.isEnabled = false
+                start_button.text = "停止"
+                if (mTimer == null){
+                    mTimer = Timer()
+                    mTimer!!.schedule(object : TimerTask() {
+                        override fun run() {
+                            mTimerSec += 2.0
+                            mHandler.post {
+                                timer.text = String.format("%2.0f", mTimerSec)
+                            }
+                        }
+                    }, 100, 100) // 最初に始動させるまで 100ミリ秒、ループの間隔を 100ミリ秒 に設定
+                }
+
+
+
+            } else {
+//            Todo 再生ボタン2回目でやること
+                move_button.isEnabled = true
+                back_button.isEnabled = true
+                start_button.text = "再生"
+                start = null
+
+
+            }
         }
     }
+
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
