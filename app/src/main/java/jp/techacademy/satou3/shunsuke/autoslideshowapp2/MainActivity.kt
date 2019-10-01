@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         back_button.setOnClickListener {
-            //            Todo 戻るボタンでやること
+            //             戻るボタンでやること
             if (cursor!!.moveToPrevious()) {
             } else {
                 cursor!!.moveToLast()
