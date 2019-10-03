@@ -85,18 +85,23 @@ class MainActivity : AppCompatActivity() {
                                 } else {
                                     cursor!!.moveToFirst()
                                 }
+
+                                // indexからIDを取得し、そのIDから画像のURIを取得する
+                                var fieldIndex = cursor!!.getColumnIndex(MediaStore.Images.Media._ID)
+                                var id = cursor!!.getLong(fieldIndex)
+                                var imageUri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
+                                imageView.setImageURI(imageUri)
                             }
                         }
                     }, 2000, 2000)
                 }
-
-
 
             } else {
 //             再生ボタン2回目でやること
                 move_button.isEnabled = true
                 back_button.isEnabled = true
                 start_button.text = "再生"
+                mTimer!!.cancel()
                 mTimer = null
             }
         }
@@ -109,7 +114,7 @@ class MainActivity : AppCompatActivity() {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getContentsInfo()
                 }else{
-                    imageView.setImageResource(R.drawable.RED19428C001_TP_V)
+                    imageView.setImageResource(R.drawable.mt_fuji)
                 }
         }
     }
