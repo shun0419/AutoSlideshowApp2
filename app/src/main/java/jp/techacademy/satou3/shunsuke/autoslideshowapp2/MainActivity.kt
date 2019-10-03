@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -40,6 +41,8 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+
+
         move_button.setOnClickListener {
             //            　進むボタンでやること
             if (cursor!!.moveToNext()) {
@@ -68,8 +71,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         start_button.setOnClickListener {
-
-
             if (mTimer == null) {
 //             再生ボタン1回目でやること
                 move_button.isEnabled = false
@@ -84,7 +85,6 @@ class MainActivity : AppCompatActivity() {
                                 } else {
                                     cursor!!.moveToFirst()
                                 }
-
                             }
                         }
                     }, 2000, 2000)
@@ -108,6 +108,8 @@ class MainActivity : AppCompatActivity() {
             PERMISSIONS_REQUEST_CODE ->
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     getContentsInfo()
+                }else{
+                    imageView.setImageResource(R.drawable.RED19428C001_TP_V)
                 }
         }
     }
